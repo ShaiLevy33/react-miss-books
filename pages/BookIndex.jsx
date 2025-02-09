@@ -2,36 +2,43 @@ const { useEffect, useState } = React
 const { Link } = ReactRouterDOM
 
 import { bookService } from '../services/bookService.service.js'
+import { BookFilter } from "../cmps/BookFilter.jsx"
+import { BookList } from "../cmps/BookList.jsx"
 
-export function BookDetails() {
+export function BookIndex() {
 
-    const [book, setBook] = useState(null)  
+    const [books, setBooks] = useState(null)  
     const [filterBy, setFilterBy] = useState(bookService.getDefaultFilter())
 
 
     useEffect(() => {
         loadBook()
-    }, []) 
+    }, [filterBy]) 
 
     function loadBook() {
-        const bookId = 1
-        bookService.getById(bookId)
-            .then(book => setBook(book))
+        
+
             bookService.query(filterBy)
-            .then(setBook)
+            .then(setBooks)
             .catch(err => {
                 console.log('Cannot get books:', err)
             })
     }
 
+    function onSetFilter(filterBy) {
+        console.log('filterBy:', filterBy)
+        setFilterBy(prevFilter => ({ ...prevFilter, ...filterBy }))
+    }
+
+    if (!books) return <div className="loader">Loading...</div>
     return (
-        <section className="book-index">
-            {/* <CarFilter onSetFilter={onSetFilter} filterBy={filterBy} />
-            <Link to="/car/edit">Add Car</Link>
-            <CarList
-                cars={cars}
-                onRemoveCar={onRemoveCar}
-            /> */}
+        <section className="car-index">
+            <BookFilter onSetFilter={onSetFilter} filterBy={filterBy} />
+            {/* <Link to="/car/edit">Add Car</Link> */}
+            <BookList
+                books={books}
+                // onRemoveCar={onRemoveCar}
+            />
         </section>
     )
 

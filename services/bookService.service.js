@@ -2,7 +2,6 @@ import { loadFromStorage, makeId, saveToStorage } from './util.service.js'
 import { storageService } from './async-storage.service.js'
 
 const BOOK_KEY = 'bookDB'
-_createBooks()
 const booksData = [
   {
     "id": "OXeMG8wNskc",
@@ -445,6 +444,7 @@ const booksData = [
     }
   }
 ]
+_createBooks()
 
 
 
@@ -494,8 +494,8 @@ function getDefaultFilter() {
 
 function _createBooks() {
     let books = loadFromStorage(BOOK_KEY)
-    if (!books || !books.length) {
-        saveToStorage(BOOK_KEY, booksData.stringify())
+    if (!books || !books.length || books == "undefined") {
+        saveToStorage(BOOK_KEY, booksData)
     }
 }
 
