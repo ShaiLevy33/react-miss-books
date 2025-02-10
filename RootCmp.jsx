@@ -19,7 +19,7 @@ export function RootCmp() {
                  <Route path="/home" element={<Home />} />
                  <Route path="/about" element={<About />} />
                  <Route path="/book" element={<BookIndex />} />
-                     {/* <Route path="/book/:bookId" element={<BookDetails />} /> */}
+                     {/* <Route path="/book/:id" element={<BookDetails />} /> */}
                 </Routes>
             </main>
         </section>

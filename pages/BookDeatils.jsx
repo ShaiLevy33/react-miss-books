@@ -34,12 +34,19 @@ export function BookDetails() {
 
     return (
         <section className="book-details">
-            {/* <h1>Car Vendor: {car.vendor}</h1>
-            <h1>Car Speed: {car.speed}</h1>
-            <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Facilis quae fuga eveniet, quisquam ducimus modi optio in alias accusantium corrupti veritatis commodi tenetur voluptate deserunt nihil quibusdam. Expedita, architecto omnis?</p>
-            <img src={`../assets/img/${car.vendor}.png`} alt="car-image" />
-            <button onClick={onBack}>Back</button>
+            <h1>Title: {book.title}</h1>
+            <h1>Subtitle: {book.subtitle}</h1>
             <section>
+                {book.authors && book.authors.map((author, index) => (
+                    <h1 key={index}>{author}</h1>
+                ))}
+            </section>
+            <h1>publishedDate: {book.publishedDate}</h1>
+            <p>{book.description}</p>
+
+            <img src={book.thumbnail} alt="book-image" />
+            <button onClick={onBack}>Back</button>
+            {/* <section>
                 <button ><Link to={`/car/${car.prevCarId}`}>Prev Car</Link></button>
                 <button ><Link to={`/car/${car.nextCarId}`}>Next Car</Link></button>
             </section> */}

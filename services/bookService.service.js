@@ -489,7 +489,7 @@ function save(book) {
 }
 
 function getDefaultFilter() {
-  return { title: '', amount: '' }
+  return { title: '', price: '' }
 }
 
 function _createBooks() {
