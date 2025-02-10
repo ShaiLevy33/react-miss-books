@@ -1,0 +1,77 @@
+import { bookService } from "../services/bookService.service.js"
+
+const { useState, useEffect } = React
+const { useParams, useNavigate, Link } = ReactRouterDOM
+
+export function BookDetails() {
+
+    const [book, setBook] = useState(null)
+    const params = useParams()
+    const navigate = useNavigate()
+
+    useEffect(() => {
+        loadBook()
+    }, [params.id])
+
+    function loadBook() {
+        setBook(null)
+        bookService.get(params.id)
+            .then(setBook)
+            .catch(err => {
+                console.log('Cannot load book:', err)
+            })
+    }
+
+    function onBack() {
+        navigate('/book')
+    }
+
+const currentDate = new Date()
+const currentYear = currentDate.getFullYear()
+    // console.log('Details render')
+
+    if (!book) return <div className="loader">Loading...</div>
+
+    const priceClass = book.listPrice.amount > 150 ? 'red-text' : book.listPrice.amount < 20 ? 'green-text' : '';
+
+    return (
+        <section className="book-details">
+            <h1>Title: {book.title}</h1>
+            <h1>Subtitle: {book.subtitle}</h1>
+            <section>
+                {book.authors && book.authors.map((author, index) => (
+                    <h1 key={index}>{author}</h1>
+                ))}
+            </section>
+            <h1>publishedDate: {book.publishedDate} { (currentYear - book.publishedDate) > 10 && 'Vintage'}
+            { (currentYear - book.publishedDate) < 1 && 'Vintage'}
+            </h1>
+            <p>Description - {book.description}</p>
+            <section>
+                <h1>Number of Pages: {book.pageCount} {book.pageCount < 100 && 'Light Reading'}
+                    {(book.pageCount < 500 &&  book.pageCount >= 100) && 'Descent Reading'}
+                    {book.pageCount >= 500 && 'Serious Reading'} </h1>
+            </section>
+            <section>
+                {book.categories && book.categories.map((category, index) => (
+                    <h1 key={index}>{category}</h1>
+                ))}
+            </section>
+            <h1>Language: {book.language}</h1>
+            <h1 className={priceClass} >Price: {book.listPrice.amount}  {book.listPrice.currencyCode}</h1>
+           <div>
+            <img width="5%" src={book.listPrice.isOnSale && "../assets/img/onSale.jpg"}></img>
+            </div>
+            {/* // <h1>Is On Sale: {book.listPrice.isOnSale}.toString()</h1> */}
+            <div>
+            <img src={book.thumbnail} alt="book-image" />
+            </div>
+            <button onClick={onBack}>Back</button>
+            {/* <section>
+                <button ><Link to={`/car/${car.prevCarId}`}>Prev Car</Link></button>
+                <button ><Link to={`/car/${car.nextCarId}`}>Next Car</Link></button>
+            </section> */}
+        </section>
+    )
+
+}

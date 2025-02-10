@@ -461,11 +461,12 @@ function query(filterBy = {}) {
     return storageService.query(BOOK_KEY)
         .then(books => {
             if (filterBy.title) {
-                const regExp = new RegExp(filterBy.name, 'i')
-                books = books.filter(book => regExp.test(book.vendor))
+                const regExp = new RegExp(filterBy.title, 'i')
+                books = books.filter(book => regExp.test(book.title))
             }
-            if (filterBy.minSpeed) {
-                // books = books.filter(book => car.speed >= filterBy.minSpeed)
+            if (filterBy.price) {
+                 books = books.filter(book => 
+                  book.listPrice.amount== filterBy.price)
             }
             return books
         })
@@ -473,7 +474,7 @@ function query(filterBy = {}) {
 
 function get(bookId) {
     return storageService.get(BOOK_KEY, bookId)
-        .then(_setNextPrevBookId)
+        // .then(_setNextPrevBookId)
 }
 
 function remove(bookId) {

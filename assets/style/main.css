@@ -91,6 +91,13 @@ input:focus {
 	background-color: var(--clr1bg);
 	transition: background-color 1s;
 }
+.red-text {
+    color: red;
+}
+
+.green-text {
+    color: green;
+}
 
 
 /* Helpers */
