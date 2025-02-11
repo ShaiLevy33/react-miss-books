@@ -67,10 +67,10 @@ const currentYear = currentDate.getFullYear()
             <img src={book.thumbnail} alt="book-image" />
             </div>
             <button onClick={onBack}>Back</button>
-            {/* <section>
-                <button ><Link to={`/car/${car.prevCarId}`}>Prev Car</Link></button>
-                <button ><Link to={`/car/${car.nextCarId}`}>Next Car</Link></button>
-            </section> */}
+            <section>
+                <button ><Link to={`/book/${book.prevBookId}`}>Prev Book</Link></button>
+                <button ><Link to={`/book/${book.nextBookId}`}>Next Book</Link></button>
+            </section>
         </section>
     )
 
