@@ -60,7 +60,7 @@ const currentYear = currentDate.getFullYear()
             <h1>Language: {book.language}</h1>
             <h1 className={priceClass} >Price: {book.listPrice.amount}  {book.listPrice.currencyCode}</h1>
            <div>
-            <img width="5%" src={book.listPrice.isOnSale && "../assets/img/onSale.jpg"}></img>
+            <img width="5%" src={book.listPrice.isOnSale && "assets/img/onSale.jpg"}></img>
             </div>
             {/* // <h1>Is On Sale: {book.listPrice.isOnSale}.toString()</h1> */}
             <div>
