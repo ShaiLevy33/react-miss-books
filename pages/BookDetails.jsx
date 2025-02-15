@@ -1,4 +1,5 @@
 import { bookService } from "../services/bookService.service.js"
+import { LongTxt } from "../cmps/LongTxt.jsx";
 
 const { useState, useEffect } = React
 const { useParams, useNavigate, Link } = ReactRouterDOM
@@ -46,7 +47,9 @@ const currentYear = currentDate.getFullYear()
             <h1>publishedDate: {book.publishedDate} { (currentYear - book.publishedDate) > 10 && 'Vintage'}
             { (currentYear - book.publishedDate) < 1 && 'Vintage'}
             </h1>
-            <p>Description - {book.description}</p>
+            <p>Description -</p>
+            <LongTxt>{book.description}
+            </LongTxt>
             <section>
                 <h1>Number of Pages: {book.pageCount} {book.pageCount < 100 && 'Light Reading'}
                     {(book.pageCount < 500 &&  book.pageCount >= 100) && 'Descent Reading'}
