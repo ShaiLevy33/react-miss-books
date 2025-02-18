@@ -1,5 +1,7 @@
 import { bookService } from "../services/bookService.service.js"
 import { LongTxt } from "../cmps/LongTxt.jsx";
+import {AddReview} from "../cmps/AddReview.jsx"
+import { ReviewList } from "../cmps/ReviewList.jsx";
 
 const { useState, useEffect } = React
 const { useParams, useNavigate, Link } = ReactRouterDOM
@@ -7,11 +9,13 @@ const { useParams, useNavigate, Link } = ReactRouterDOM
 export function BookDetails() {
 
     const [book, setBook] = useState(null)
+    const [reviews, setReviews] = useState(null)
     const params = useParams()
     const navigate = useNavigate()
 
     useEffect(() => {
         loadBook()
+        loadReviews()
     }, [params.id])
 
     function loadBook() {
@@ -22,9 +26,26 @@ export function BookDetails() {
                 console.log('Cannot load book:', err)
             })
     }
+    function loadReviews() {
+        bookService.queryReviews(params.id)
+        .then(setReviews)
+        .catch(err => {
+        console.log('Cannot load reviews:', err)
+    })
+    }
 
     function onBack() {
         navigate('/book')
+    }
+    function onRemoveReview( reviewId) {
+        bookService.removeReview(params.id,reviewId)
+            .then(() => {
+                setReviews(reviews => reviews.filter(review => review.id !== reviewId))
+            })
+            .catch(err => {
+                console.log('Cannot remove review:', err)
+            })
+
     }
 
 const currentDate = new Date()
@@ -69,11 +90,17 @@ const currentYear = currentDate.getFullYear()
             <div>
             <img src={book.thumbnail} alt="book-image" />
             </div>
+            <h1>Add Review</h1>
+            <AddReview bookId={book.id} onLoadReviews={loadReviews}></AddReview>
+            {reviews && reviews.length > 0 && <h1>Book's Reviews</h1>}
+            <ReviewList reviews={reviews} onRemoveReview={onRemoveReview}></ReviewList>
             <button onClick={onBack}>Back</button>
             <section>
                 <button ><Link to={`/book/${book.prevBookId}`}>Prev Book</Link></button>
                 <button ><Link to={`/book/${book.nextBookId}`}>Next Book</Link></button>
             </section>
+
+
         </section>
     )
 

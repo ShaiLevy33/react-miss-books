@@ -2,6 +2,7 @@ import { loadFromStorage, makeId, saveToStorage } from './util.service.js'
 import { storageService } from './async-storage.service.js'
 
 const BOOK_KEY = 'bookDB'
+const REVIEW_KEY = 'reviewDB'
 const booksData = [
   {
     "id": "OXeMG8wNskc",
@@ -452,9 +453,12 @@ export const bookService = {
     query,
     get,
     remove,
+    removeReview,
     save,
     getEmptyBook,
     getDefaultFilter,
+    addReview,
+    queryReviews
 }
 
 function query(filterBy = {}) {
@@ -472,6 +476,15 @@ function query(filterBy = {}) {
         })
 }
 
+function queryReviews(reviewId)
+{
+  let reviewkey = REVIEW_KEY + reviewId
+  return storageService.query(reviewkey)
+        .then(reviews=> {
+          return reviews
+        })
+}
+
 function get(bookId) {
     return storageService.get(BOOK_KEY, bookId)
         .then(_setNextPrevBookId)
@@ -479,6 +492,11 @@ function get(bookId) {
 
 function remove(bookId) {
     return storageService.remove(BOOK_KEY, bookId)
+}
+
+function removeReview(bookId ,reviewId) {
+  let reviewkey = REVIEW_KEY + bookId
+  return storageService.remove(reviewkey, reviewId)
 }
 
 function save(book) {
@@ -495,6 +513,12 @@ function getDefaultFilter() {
 
 function getEmptyBook(title = '', price = '') {
   return { title, price }
+}
+
+function addReview(bookId, fullName, rating , readAt, explain)
+{
+  let reviewBookKey= REVIEW_KEY + bookId.bookId
+  return storageService.post(reviewBookKey ,{ fullName, rating , readAt , explain })
 }
 
 function _createBooks() {
