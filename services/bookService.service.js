@@ -450,61 +450,61 @@ _createBooks()
 
 
 export const bookService = {
-    query,
-    get,
-    remove,
-    removeReview,
-    save,
-    getEmptyBook,
-    getDefaultFilter,
-    addReview,
-    queryReviews
+  query,
+  get,
+  remove,
+  removeReview,
+  save,
+  getEmptyBook,
+  getDefaultFilter,
+  addReview,
+  queryReviews,
+  getFilterFromSearchParams
 }
 
 function query(filterBy = {}) {
-    return storageService.query(BOOK_KEY)
-        .then(books => {
-            if (filterBy.title) {
-                const regExp = new RegExp(filterBy.title, 'i')
-                books = books.filter(book => regExp.test(book.title))
-            }
-            if (filterBy.price) {
-                 books = books.filter(book => 
-                  book.listPrice.amount== filterBy.price)
-            }
-            return books
-        })
+  return storageService.query(BOOK_KEY)
+    .then(books => {
+      if (filterBy.title) {
+        const regExp = new RegExp(filterBy.title, 'i')
+        books = books.filter(book => regExp.test(book.title))
+      }
+      if (filterBy.price) {
+        books = books.filter(book =>
+          book.listPrice.amount == filterBy.price)
+      }
+      return books
+    })
 }
 
-function queryReviews(reviewId)
-{
+function queryReviews(reviewId) {
   let reviewkey = REVIEW_KEY + reviewId
   return storageService.query(reviewkey)
-        .then(reviews=> {
-          return reviews
-        })
+    .then(reviews => {
+      return reviews
+    })
 }
 
 function get(bookId) {
-    return storageService.get(BOOK_KEY, bookId)
-        .then(_setNextPrevBookId)
+  return storageService.get(BOOK_KEY, bookId)
+    .then(_setNextPrevBookId)
 }
 
 function remove(bookId) {
-    return storageService.remove(BOOK_KEY, bookId)
+  return storageService.remove(BOOK_KEY, bookId)
 }
 
-function removeReview(bookId ,reviewId) {
+function removeReview(bookId, reviewId) {
   let reviewkey = REVIEW_KEY + bookId
   return storageService.remove(reviewkey, reviewId)
 }
 
 function save(book) {
-    if (book.id) {
-        return storageService.put(BOOK_KEY, book)
-    } else {
-        return storageService.post(BOOK_KEY, book)
-    }
+  if (book.id) {
+    return storageService.put(BOOK_KEY, book)
+  } else {
+    return storageService.post(BOOK_KEY, book)
+  }
 }
 
 function getDefaultFilter() {
@@ -515,27 +515,37 @@ function getEmptyBook(title = '', price = '') {
   return { title, price }
 }
 
-function addReview(bookId, fullName, rating , readAt, explain)
-{
-  let reviewBookKey= REVIEW_KEY + bookId.bookId
-  return storageService.post(reviewBookKey ,{ fullName, rating , readAt , explain })
+function addReview(bookId, fullName, rating, readAt, explain) {
+  let reviewBookKey = REVIEW_KEY + bookId.bookId
+  return storageService.post(reviewBookKey, { fullName, rating, readAt, explain })
+}
+
+
+function getFilterFromSearchParams(searchParams) {
+  const defaultFilter = getDefaultFilter()
+  const filterBy = {}
+  for (const field in defaultFilter) {
+    filterBy[field] = searchParams.get(field) ||
+      defaultFilter[field]
+  }
+  return filterBy
 }
 
 function _createBooks() {
-    let books = loadFromStorage(BOOK_KEY)
-    if (!books || !books.length || books == "undefined") {
-        saveToStorage(BOOK_KEY, booksData)
-    }
+  let books = loadFromStorage(BOOK_KEY)
+  if (!books || !books.length || books == "undefined") {
+    saveToStorage(BOOK_KEY, booksData)
+  }
 }
 
 function _setNextPrevBookId(book) {
   return query().then((books) => {
-      const bookIdx = books.findIndex((currBook) => currBook.id === book.id)
-      const nextBook = books[bookIdx + 1] ? books[bookIdx + 1] : books[0]
-      const prevBook = books[bookIdx - 1] ? books[bookIdx - 1] : books[books.length - 1]
-      book.nextBookId = nextBook.id
-      book.prevBookId = prevBook.id
-      return book
+    const bookIdx = books.findIndex((currBook) => currBook.id === book.id)
+    const nextBook = books[bookIdx + 1] ? books[bookIdx + 1] : books[0]
+    const prevBook = books[bookIdx - 1] ? books[bookIdx - 1] : books[books.length - 1]
+    book.nextBookId = nextBook.id
+    book.prevBookId = prevBook.id
+    return book
   })
 }
 

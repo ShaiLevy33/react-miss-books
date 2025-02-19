@@ -35,3 +35,12 @@ export function loadFromStorage(key) {
     return (data) 
     // ? JSON.parse(data) : undefined
 }
+export function debounce(func, time = 500) {
+    var timeoutId
+    return (...args) => {
+        clearTimeout(timeoutId)
+        timeoutId = setTimeout(() => {
+            func(...args)
+        }, time);
+    }
+}

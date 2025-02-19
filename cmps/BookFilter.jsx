@@ -1,6 +1,6 @@
 import { bookService } from "../services/bookService.service.js"
 
-const { useState, useEffect } = React
+const { useState, useEffect   } = React
 
 
 export function BookFilter({ filterBy, onSetFilter }) {
@@ -10,6 +10,7 @@ export function BookFilter({ filterBy, onSetFilter }) {
     // useEffect(() => {
     //     onSetFilter(filterByToEdit)
     // }, [filterByToEdit])
+
 
     function handleChange({ target }) {
         let { value, name: field } = target
