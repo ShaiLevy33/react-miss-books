@@ -459,7 +459,8 @@ export const bookService = {
   getDefaultFilter,
   addReview,
   queryReviews,
-  getFilterFromSearchParams
+  getFilterFromSearchParams, 
+  getCategoryStats
 }
 
 function query(filterBy = {}) {
@@ -529,6 +530,48 @@ function getFilterFromSearchParams(searchParams) {
       defaultFilter[field]
   }
   return filterBy
+}
+
+function getCategoryStats() {
+  return storageService.query(BOOK_KEY)
+    .then(books => {
+      var categoriesLength = 0;
+      for (var i = 0; i < books.length; i++) {
+        categoriesLength += books[i].categories.length
+      }
+      const bookCountByCategoryMap = _getBookCountByCategoryMap(books)
+      const data = Object.keys(bookCountByCategoryMap)
+        .map(category =>
+        ({
+          title: category,
+          value: Math.round((bookCountByCategoryMap[category]
+            / categoriesLength) * 100) 
+        }))
+      return data
+    })
+}
+
+function _getBookCountByCategoryMap(books) {
+  const bookCountByCategoryMap = books.reduce((map, book) => {
+    for (var i=0;i<book.categories.length;i++){ 
+ if (!map[book.categories[i]]) 
+ {
+  map[book.categories[i]] = 1
+
+ }
+ else{
+    map[book.categories[i]]++
+ }
+      // map[book.categories][i]++
+
+    }
+    // if (!map[book.categories]) map[book.categories] = 0
+    // map[book.categories]++
+    return map
+  }, {})
+
+
+  return bookCountByCategoryMap
 }
 
 function _createBooks() {
